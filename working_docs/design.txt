@@ -1,0 +1,24 @@
+Design Considerations
+
+The following is the design we are considering
+
+
+Assignment 1
+
+Will be implemented with the following design for now.
+
+Documentation
+    Classes will be implemented with javadoc ensuring that parameters and returns are clearly documented
+
+Controller class
+The task will be implemented by using a controller class which will initialize the coin slot and buttons. It will hold machine states and methods to control the function of the vending machine.
+
+
+Coin Slot
+    Implement Listeners where actions invoke methods in the controller class
+
+Buttons
+    Implement Listeners where actions invoke methods in the controller class
+    
+Testing
+    Test Controller Class, Coin Slot and Listeners, Buttons and Listeners to full or near full code coverage

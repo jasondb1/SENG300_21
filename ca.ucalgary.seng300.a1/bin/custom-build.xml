@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="all" name="org.lsmr.vending.custom">
+	<import file="build.xml" as="generated" />
+
+	<path id="classpath">
+		<path refid="org.lsmr.vending.classpath" />
+	</path>
+
+	<target name="custom-init" depends="generated.init">
+		<mkdir dir="doc" />
+	</target>
+
+	<target name="custom-clean" depends="generated.clean">
+		<delete dir="doc" />
+	</target>
+
+	<target name="build-docs" depends="generated.build,custom-init">
+		<javadoc sourcepath="src" destdir="doc">
+			<classpath refid="classpath" />
+		</javadoc>
+	</target>
+
+	<target name="test" depends="generated.build" />
+	
+	<target name="all" depends="test,build-docs" />
+</project>
