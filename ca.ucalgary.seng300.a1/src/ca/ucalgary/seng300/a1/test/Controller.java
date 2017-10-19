@@ -27,7 +27,7 @@ public class Controller implements Observer{
 
 	//listeners
 	private CSListener csListener = new CSListener();
-	//TODO: maybe make SBListener into an array;
+	//TODO: maybe make SBListener into an arraylist;
 	private SBListener[] sbListener;
 
 
@@ -38,8 +38,6 @@ public class Controller implements Observer{
 
 		vendingMachine = new VendingMachine(validCoins, buttonLabels.length, coinRackCapacity,
 													popCanNames.length, receptacleCapacity);
-
-		//does vm need to be enabled - does it start in disabled mode?
 
 		//register coinslot listener
 		vendingMachine.getCoinSlot().register(csListener);
@@ -60,16 +58,49 @@ public class Controller implements Observer{
 	 */
 	public void update(Observable listener, Object obj)
 	   {
-	      if (listener == csListener)
+	      //Coin Slot Event
+			if (listener == csListener)
 	      {
-	    	  	System.out.println("CSListener event reporting!");
-	         //TODO: Deal with the coin Slot
+		         //TODO: Deal with the coin Slot
+	    	  switch (csListener.getStatus()) {
+	    	  case "Enabled":
+	    		  //TODO: Something
+	    		  break;
+	    	  case "Disabled":
+	    		  //TODO: Something
+	    		  break;
+	    	  case "Accepted":
+	    		  //TODO: Something
+	    		  break;
+	    	  case "Rejected":
+	    		  //TODO: Something
+	    		  break;
+	    	  default:
+	    		  break;
+
+	    	  }
+	    	  System.out.println("CSListener event reporting!");
 	      }
 
-	      //Will have to see if this works or not.
+	      //Selection Button Event
 	      for (Object buttonListener: sbListener)
 	      if (listener == buttonListener)
 	      {
+		      //TODO: Deal with the selection button
+	    	  switch (csListener.getStatus()) {
+	    	  case "Enabled":
+	    		  //TODO: Something
+	    		  break;
+	    	  case "Disabled":
+	    		  //TODO: Something
+	    		  break;
+	    	  case "Pressed":
+	    		  //TODO: Something
+	    		  break;
+	    	  default:
+	    		  break;
+
+	    	  }
 	    	  System.out.println("SBListener event");
 	         //TODO: Deal with selection buttons
 	      }

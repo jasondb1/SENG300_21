@@ -9,23 +9,47 @@ import ca.ucalgary.seng300.a1.hardware.SelectionButtonListener;
 
 public class SBListener extends Observable implements SelectionButtonListener {
 
-	@Override
+	private String status = "Listening";
+
+	/* (non-Javadoc)
+	 * @see ca.ucalgary.seng300.a1.hardware.AbstractHardwareListener#enabled(ca.ucalgary.seng300.a1.hardware.AbstractHardware)
+	 */
 	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
-		// TODO Auto-generated method stub
-
+		status = "Enabled";
+	    setChanged();
+	    notifyObservers();
 	}
 
-	@Override
+	/* (non-Javadoc)
+	 * @see ca.ucalgary.seng300.a1.hardware.AbstractHardwareListener#disabled(ca.ucalgary.seng300.a1.hardware.AbstractHardware)
+	 */
 	public void disabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
-		// TODO Auto-generated method stub
-
+		status = "Disabled";
+	    setChanged();
+	    notifyObservers();
 	}
 
-	@Override
+	/* (non-Javadoc)
+	 * @see ca.ucalgary.seng300.a1.hardware.SelectionButtonListener#pressed(ca.ucalgary.seng300.a1.hardware.SelectionButton)
+	 */
 	public void pressed(SelectionButton button) {
-		// TODO Auto-generated method stub
+		status = "Pressed";
+	    setChanged();
+	    notifyObservers();
 
 	}
 
-	//get
+	/**
+	 * @return the status of the selection button listener
+	 */
+	public String getStatus(){
+		return status;
+	}
+
+	/**Sets the status to the default value
+	 *
+	 */
+	public void clearStatus() {
+		status = "Listening";
+	}
 }
