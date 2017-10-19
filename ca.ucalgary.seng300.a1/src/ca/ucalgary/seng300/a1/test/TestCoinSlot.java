@@ -1,6 +1,6 @@
 package ca.ucalgary.seng300.a1.test;
 
-import static junit.Assert.*;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
