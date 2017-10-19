@@ -5,6 +5,9 @@ package ca.ucalgary.seng300.a1.test;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.lsmr.vending.Coin;
@@ -22,12 +25,14 @@ public class TestController {
 	Coin invalidCoin = new Coin (500);
 
 	//Vending Machine Parameters
-	private int validCoins[] = {5, 10, 25, 100, 200};
-	private int popCanCosts[] = {250, 250, 350};
-	private String[] buttonLabel = {"button1", "button2", "button3"};
-	private String[] popCanNames = {"pop1","pop2","pop3"};
+	private int[] validCoins = {5, 10, 25, 100, 200};
+	private int[] costs = {200, 250, 300};
+	private ArrayList<Integer> popCanCosts;
+	private ArrayList<String> popCanNames;
+	private String[] names = {"pop1","pop2","pop3"};
 	private int coinRackCapacity = 200;
 	private int receptacleCapacity = 200;
+	private int popCanRackCapacity = 20;
 
 	//Hardware
 	private VendingMachine vendingMachine;
@@ -39,10 +44,15 @@ public class TestController {
 	 */
 	@Before
 	public void setupVendingmachine() {
-		vendingMachine = new VendingMachine(validCoins, buttonLabel.length, coinRackCapacity,
-				popCanNames.length, receptacleCapacity);
 
-		controller = new Controller(vendingMachine, buttonLabel);
+		popCanCosts = new ArrayList(Arrays.asList(costs));
+		popCanNames = new ArrayList(Arrays.asList(names));
+
+		vendingMachine = new VendingMachine(validCoins, popCanNames.size(), coinRackCapacity,
+				popCanRackCapacity, receptacleCapacity);
+		vendingMachine.configure(popCanNames, popCanCosts);
+
+		controller = new Controller(vendingMachine, names);
 	}
 
 	@Test

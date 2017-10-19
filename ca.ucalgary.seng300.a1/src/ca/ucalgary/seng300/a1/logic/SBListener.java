@@ -9,16 +9,15 @@ public class SBListener extends Observable implements SelectionButtonListener {
 
 	private String status = "Listening";
 	private String label;
-	private int id;
+	private int rackID;
 
 	/**
-	 * @param id
-	 *            An integer identification of the button
-	 * @param label
-	 *            A text label given to the button
+	 * @param rackID
+	 *            An integer identifying the associated rack
+	 *  @param label The label given to the button
 	 */
-	public SBListener(int id, String label) {
-		this.id = id;
+	public SBListener(int rackID, String label) {
+		this.rackID = id;
 		this.label = label;
 	}
 
@@ -81,7 +80,7 @@ public class SBListener extends Observable implements SelectionButtonListener {
 	 * @return the id of the button
 	 */
 	public int getID() {
-		return id;
+		return rackID;
 	}
 
 	/**
