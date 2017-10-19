@@ -4,13 +4,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import ca.ucalgary.seng300.a1.Coin;
-import ca.ucalgary.seng300.a1.hardware.CoinChannel;
-import ca.ucalgary.seng300.a1.hardware.CoinRack;
-import ca.ucalgary.seng300.a1.hardware.CoinReceptacle;
-import ca.ucalgary.seng300.a1.hardware.CoinSlot;
-import ca.ucalgary.seng300.a1.hardware.PopCanRack;
-import ca.ucalgary.seng300.a1.hardware.SelectionButton;
-import ca.ucalgary.seng300.a1.hardware.SelectionButtonListener;
+import ca.ucalgary.seng300.a1.hardware.DisabledException;
+import ca.ucalgary.seng300.a1.hardware.VendingMachine;
 
 /** The controller class that initializes the implemented hardware and handles events
  * @author
@@ -18,47 +13,44 @@ import ca.ucalgary.seng300.a1.hardware.SelectionButtonListener;
  */
 public class Controller implements Observer{
 
-
-    private PopCanRack[] popCanRacks;
-    private int[] popCanCosts;
-    private String[] popCanNames;
-    private SelectionButton[] button;
-    private CoinRack[] coinRacks;
-
+	private VendingMachine vendingMachine;
 
     //Set machine parameters
 	int validCoins[] = {5, 10, 25, 100, 200};
-	int prices[] = {250, 250,350};
+	int popCanCosts[] = {250, 250,350};
+	String buttonLabels[] = {"button1", "button2", "button3"};
+	private String[] popCanNames = {"pop1","pop2","pop3"};
+	int coinRackCapacity = 200;
+	int receptacleCapacity = 200;
 
 	//hardware
-	private CoinSlot coinSlotInstance = new CoinSlot(validCoins);
-
-	private CoinReceptacle invalidCapacity = new CoinReceptacle(200);
-	private CoinReceptacle validCapacity = new CoinReceptacle(200);
-
-	private CoinChannel validChannel = new CoinChannel(validCapacity);
-	private CoinChannel invalidChannel = new CoinChannel(invalidCapacity);
 
 	//listeners
 	private CSListener csListener = new CSListener();
+	//TODO: maybe make SBListener into an array;
 	private SBListener[] sbListener;
 
 
 	/**Constructor
 	 *
 	 */
-	//TODO: may need to put parameters in constructor such as validCoins and prices, pop_types, rack size, etc
 	public Controller() {
 
-		coinSlotInstance.connect(validChannel, invalidChannel);
-		coinSlotInstance.register(csListener);
+		vendingMachine = new VendingMachine(validCoins, buttonLabels.length, coinRackCapacity,
+													popCanNames.length, receptacleCapacity);
+
+		//does vm need to be enabled - does it start in disabled mode?
+
+		//register coinslot listener
+		vendingMachine.getCoinSlot().register(csListener);
 		csListener.addObserver(this);
 
-		//try with 3 buttons - Maybe move to constructor
-		for(int x = 0; x<3; x++) {
+		//register button listeners
+		sbListener = new SBListener[buttonLabels.length];
+		for(int x = 0; x < buttonLabels.length; x++) {
 			sbListener[x] = new SBListener();
-			button[x] = new SelectionButton();
-			button[x].register(sbListener[x]);
+			vendingMachine.getSelectionButton(x).register(sbListener[x]);
+			sbListener[x].addObserver(this);
 		}
 	}
 
@@ -70,18 +62,40 @@ public class Controller implements Observer{
 	   {
 	      if (listener == csListener)
 	      {
+	    	  	System.out.println("CSListener event reporting!");
 	         //TODO: Deal with the coin Slot
 	      }
 
-	      //i'm not sure if this will work or not
+	      //Will have to see if this works or not.
 	      for (Object buttonListener: sbListener)
 	      if (listener == buttonListener)
 	      {
+	    	  System.out.println("SBListener event");
 	         //TODO: Deal with selection buttons
 	      }
 
 	   }
+
+	/** returns the vending machine object
+	 * @return VendingMachine Object
+	 */
+	public VendingMachine getVendingMachine() {
+		return vendingMachine;
+	}
+
 	//TODO: Methods related to machine function
+
+
+
+	/** For quick running/tests of code
+	 *
+	 * @param args
+	 * @throws DisabledException
+	 */
+	public static void main(String[] args) throws DisabledException {
+		Controller controller = new Controller();
+		controller.getVendingMachine().getCoinSlot().addCoin(new Coin(100));
+	}
 
 
 
