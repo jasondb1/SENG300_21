@@ -14,35 +14,53 @@ import ca.ucalgary.seng300.a1.hardware.CoinSlotListener;
  */
 public class CSListener extends Observable implements CoinSlotListener {
 
+	private String status = "Listening";
 
-
-	private boolean insertedValidCoin = false;
-	private boolean coinRejected = false;
-	private boolean enabled;
-	private boolean disabled;
 	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
-		enabled = true;
+		status = "Enabled";
 	    setChanged();
 	    notifyObservers();
 	}
 
+	/* (non-Javadoc)
+	 * @see ca.ucalgary.seng300.a1.hardware.AbstractHardwareListener#disabled(ca.ucalgary.seng300.a1.hardware.AbstractHardware)
+	 */
 	public void disabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
-		disabled = true;
+		status = "Disabled";
 	      setChanged();
 	      notifyObservers();
 	}
 
+	/* (non-Javadoc)
+	 * @see ca.ucalgary.seng300.a1.hardware.CoinSlotListener#validCoinInserted(ca.ucalgary.seng300.a1.hardware.CoinSlot, ca.ucalgary.seng300.a1.Coin)
+	 */
 	public void validCoinInserted(CoinSlot slot, Coin coin) {
-		insertedValidCoin = true;
+		status = "Accepted";
 	    setChanged();
 	    notifyObservers();
 	}
 
+	/* (non-Javadoc)
+	 * @see ca.ucalgary.seng300.a1.hardware.CoinSlotListener#coinRejected(ca.ucalgary.seng300.a1.hardware.CoinSlot, ca.ucalgary.seng300.a1.Coin)
+	 */
 	public void coinRejected(CoinSlot slot, Coin coin) {
-		coinRejected = true;
+		status = "Rejected";
 	    setChanged();
 	    notifyObservers();
 	}
 
-	//TODO: Getters and setters if required
+	/**
+	 * @return the status of the coinslot listener
+	 */
+	public String getStatus(){
+		return status;
+	}
+
+	/**Sets the status to the default value
+	 *
+	 */
+	public void clearStatus() {
+		status = "Listening";
+	}
+
 }
