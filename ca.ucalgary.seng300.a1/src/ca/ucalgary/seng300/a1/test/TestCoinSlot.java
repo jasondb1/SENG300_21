@@ -6,19 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 //import org.junit.Rule;
 import org.junit.Test;
-
-import ca.ucalgary.seng300.a1.Coin;
-import ca.ucalgary.seng300.a1.hardware.AbstractCoinAcceptor;
-import ca.ucalgary.seng300.a1.hardware.AbstractHardware;
-import ca.ucalgary.seng300.a1.hardware.AbstractHardwareListener;
-import ca.ucalgary.seng300.a1.hardware.CapacityExceededException;
-import ca.ucalgary.seng300.a1.hardware.CoinChannel;
-import ca.ucalgary.seng300.a1.hardware.CoinReceptacle;
-import ca.ucalgary.seng300.a1.hardware.CoinSlot;
-import ca.ucalgary.seng300.a1.hardware.CoinSlotListener;
-import ca.ucalgary.seng300.a1.hardware.DeliveryChute;
-import ca.ucalgary.seng300.a1.hardware.DisabledException;
-import ca.ucalgary.seng300.a1.hardware.SimulationException;
+import org.lsmr.vending.Coin;
+import org.lsmr.vending.hardware.*;
 
 /**
  * @author Jason De Boer Student ID: 30034428

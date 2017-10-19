@@ -1,12 +1,9 @@
-package ca.ucalgary.seng300.a1.test;
+package ca.ucalgary.seng300.a1.logic;
 
 import java.util.Observable;
 
-import ca.ucalgary.seng300.a1.Coin;
-import ca.ucalgary.seng300.a1.hardware.AbstractHardware;
-import ca.ucalgary.seng300.a1.hardware.AbstractHardwareListener;
-import ca.ucalgary.seng300.a1.hardware.CoinSlot;
-import ca.ucalgary.seng300.a1.hardware.CoinSlotListener;
+import org.lsmr.vending.Coin;
+import org.lsmr.vending.hardware.*;
 
 /**A Coin Slot Listener for the vending machine
  * @author
@@ -15,6 +12,7 @@ import ca.ucalgary.seng300.a1.hardware.CoinSlotListener;
 public class CSListener extends Observable implements CoinSlotListener {
 
 	private String status = "Listening";
+	private int lastCoinValue = 0;
 
 	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
 		status = "Enabled";
@@ -36,6 +34,7 @@ public class CSListener extends Observable implements CoinSlotListener {
 	 */
 	public void validCoinInserted(CoinSlot slot, Coin coin) {
 		status = "Accepted";
+		lastCoinValue = coin.getValue();
 	    setChanged();
 	    notifyObservers();
 	}
@@ -50,7 +49,7 @@ public class CSListener extends Observable implements CoinSlotListener {
 	}
 
 	/**
-	 * @return the status of the coinslot listener
+	 * @return the status of the coinslot
 	 */
 	public String getStatus(){
 		return status;
@@ -61,6 +60,13 @@ public class CSListener extends Observable implements CoinSlotListener {
 	 */
 	public void clearStatus() {
 		status = "Listening";
+	}
+
+	/**
+	 * @return the status of the last value of coin inserted
+	 */
+	public int getLastCoinValue(){
+		return lastCoinValue;
 	}
 
 }
