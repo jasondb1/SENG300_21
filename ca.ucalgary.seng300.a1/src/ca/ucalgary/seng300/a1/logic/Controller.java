@@ -3,7 +3,6 @@ package ca.ucalgary.seng300.a1.logic;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.lsmr.vending.Coin;
 import org.lsmr.vending.hardware.*;
 
 /**

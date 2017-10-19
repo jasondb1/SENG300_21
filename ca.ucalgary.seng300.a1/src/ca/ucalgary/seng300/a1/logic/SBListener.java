@@ -2,7 +2,6 @@ package ca.ucalgary.seng300.a1.logic;
 
 import java.util.Observable;
 
-import org.lsmr.vending.Coin;
 import org.lsmr.vending.hardware.*;
 
 public class SBListener extends Observable implements SelectionButtonListener {
@@ -17,7 +16,7 @@ public class SBListener extends Observable implements SelectionButtonListener {
 	 *  @param label The label given to the button
 	 */
 	public SBListener(int rackID, String label) {
-		this.rackID = id;
+		this.rackID = rackID;
 		this.label = label;
 	}
 

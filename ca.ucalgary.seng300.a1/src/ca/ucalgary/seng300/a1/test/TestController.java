@@ -46,7 +46,7 @@ public class TestController {
 	public void setupVendingmachine() {
 
 		popCanCosts = new ArrayList(Arrays.asList(costs));
-		popCanNames = new ArrayList(Arrays.asList(names));
+		popCanNames = new ArrayList<String>(Arrays.asList(names));
 
 		vendingMachine = new VendingMachine(validCoins, popCanNames.size(), coinRackCapacity,
 				popCanRackCapacity, receptacleCapacity);
