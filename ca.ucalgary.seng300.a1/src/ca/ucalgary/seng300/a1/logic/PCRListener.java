@@ -27,7 +27,7 @@ public class PCRListener extends Observable implements PopCanRackListener {
 		this.rackID = rackID;
 		this.label = label;
 	}
- 
+  
 	@Override
 	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
 		status = "Enabled";
