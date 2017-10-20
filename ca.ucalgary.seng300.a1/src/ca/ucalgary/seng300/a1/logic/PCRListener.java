@@ -13,8 +13,10 @@ public class PCRListener extends Observable implements PopCanRackListener {
 
 	private String status = "Waiting";
 	private String lastAction = "Waiting";
+	private String stock = "Empty";
 	private String label;
 	private int rackID;
+	private int popQuantity = 0;
 
 	/**
 	 * @param rackID
@@ -28,19 +30,25 @@ public class PCRListener extends Observable implements PopCanRackListener {
 
 	@Override
 	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
-		// TODO Auto-generated method stub
+		status = "Enabled";
+	    setChanged();
+	    notifyObservers();
 
 	}
 
 	@Override
 	public void disabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
-		// TODO Auto-generated method stub
+		status = "Disabled";
+	    setChanged();
+	    notifyObservers();
 
 	}
 
 	@Override
 	public void popCanAdded(PopCanRack popCanRack, PopCan popCan) {
 		lastAction = "Can Added";
+		popQuantity++;
+		stock = Integer.toString(popQuantity);
 	    setChanged();
 	    notifyObservers();
 	}
@@ -48,19 +56,25 @@ public class PCRListener extends Observable implements PopCanRackListener {
 	@Override
 	public void popCanRemoved(PopCanRack popCanRack, PopCan popCan) {
 		lastAction = "Can Removed";
+		popQuantity--;
+		stock = Integer.toString(popQuantity);
 	    setChanged();
 	    notifyObservers();
 	}
 
 	@Override
 	public void popCansFull(PopCanRack popCanRack) {
-		// TODO Auto-generated method stub
+		stock = "Full";
+		setChanged();
+	    notifyObservers();
 
 	}
 
 	@Override
 	public void popCansEmpty(PopCanRack popCanRack) {
-		// TODO Auto-generated method stub
+		stock = "Empty";
+		setChanged();
+	    notifyObservers();
 
 	}
 
@@ -76,6 +90,13 @@ public class PCRListener extends Observable implements PopCanRackListener {
 
 	}
 
+	/**
+	 * @return the quantity of pops in stock for this rack
+	 */
+	public String getStock(){
+		return stock;
+	}
+	
 	/**
 	 * @return the status of the pop can rack
 	 */

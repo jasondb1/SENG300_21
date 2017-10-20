@@ -10,7 +10,6 @@ import org.lsmr.vending.hardware.*;
  * events
  *
  * @author
- *
  */
 public class Controller implements Observer {
 
