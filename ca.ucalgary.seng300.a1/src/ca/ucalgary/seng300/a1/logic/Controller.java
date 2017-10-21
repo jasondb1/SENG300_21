@@ -5,12 +5,11 @@ import java.util.Observer;
 
 import org.lsmr.vending.hardware.*;
 
-//sadfe
 /**
  * The controller class that initializes the implemented hardware and handles
  * events
  *
- * @authors Brian Hoang 10163213, Jaskaran Sidhu, Jason De Boer
+ * @authors Brian Hoang, Jaskaran Sidhu, Jason De Boer
  *
  */
 public class Controller implements Observer {
