@@ -10,7 +10,7 @@ import org.lsmr.vending.hardware.*;
  * The controller class that initializes the implemented hardware and handles
  * events
  *
- * @author
+ * @authors Brian Hoang, Jaskaran Sidhu, Jason De Boer
  *
  */
 public class Controller implements Observer {
@@ -72,26 +72,20 @@ public class Controller implements Observer {
 	public void update(Observable listener, Object obj) {
 		// Coin Slot Event
 		if (listener == csListener) {
-			// TODO: Deal with the coin Slot
-			switch (csListener.getStatus()) {
+			lastMessage = csListener.getStatus();
+			switch (lastMessage) {
 			case "Enabled":
-				// TODO: Something
 				break;
 			case "Disabled":
-				// TODO: Something
 				break;
 			case "Accepted":
 				balance += csListener.getLastCoinValue();
 				break;
 			case "Rejected":
-				// TODO: Something/Nothing
 				break;
 			default:
-				throw new SimulationException("Unknown CoinSlot Event");
-
+				throw new SimulationException("Unknown Coin Slot Event");
 			}
-			// System.out.println("CSListener event reporting!"); //Just to test if it is
-			// functioning
 		}
 
 		// Selection Button Event

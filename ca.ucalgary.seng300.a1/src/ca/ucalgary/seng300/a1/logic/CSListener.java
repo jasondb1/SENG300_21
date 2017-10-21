@@ -6,14 +6,18 @@ import org.lsmr.vending.Coin;
 import org.lsmr.vending.hardware.*;
 
 /**A Coin Slot Listener for the vending machine
- * @author
+ * @authors Brian Hoang, Jaskaran Sidhu, Jason De Boer
  *
  */
 public class CSListener extends Observable implements CoinSlotListener {
 
+	private String state = "";
 	private String status = "Listening";
 	private int lastCoinValue = 0;
 
+	/* (non-Javadoc)
+	 * @see org.lsmr.vending.hardware.AbstractHardwareListener#enabled(org.lsmr.vending.hardware.AbstractHardware)
+	 */
 	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
 		status = "Enabled";
 	    setChanged();

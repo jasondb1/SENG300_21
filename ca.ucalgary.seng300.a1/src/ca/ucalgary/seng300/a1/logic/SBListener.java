@@ -4,6 +4,11 @@ import java.util.Observable;
 
 import org.lsmr.vending.hardware.*;
 
+/**Selection Button Listener
+ *
+ * @author
+ *
+ */
 public class SBListener extends Observable implements SelectionButtonListener {
 
 	private String status = "Listening";

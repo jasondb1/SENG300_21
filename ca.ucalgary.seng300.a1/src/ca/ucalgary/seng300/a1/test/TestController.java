@@ -18,7 +18,7 @@ import org.lsmr.vending.hardware.VendingMachine;
 
 
 /**
- * @author
+ * @authors Brian Hoang, Jaskaran Sidhu, Jason De Boer
  *
  */
 public class TestController {
@@ -34,7 +34,7 @@ public class TestController {
 	private String[] names = {"pop1","pop2","pop3"};
 	private int coinRackCapacity = 200;
 	private int receptacleCapacity = 200;
-	private int popCanRackCapacity = 20;
+	private int popCanRackCapacity = 10;
 
 	//Hardware
 	private VendingMachine vendingMachine;
@@ -50,7 +50,6 @@ public class TestController {
 
 		popCanCosts = new ArrayList<Integer>(Arrays.asList(costs));
 		popCanNames = new ArrayList<String>(Arrays.asList(names));
-
 
 		//initialize vending machine
 		vendingMachine = new VendingMachine(validCoins, popCanNames.size(), coinRackCapacity,
@@ -69,13 +68,16 @@ public class TestController {
 
 	}
 
+	/**Any cleanup code required
+	 *
+	 */
 	@After
 	public void cleanup() {
 
 	}
 
 	//////////////////////////////////////////////////////////////////
-	// Testing coin entries
+	// Testing coin slot
 	//////////////////////////////////////////////////////////////////
 	/**Tests coin balances for entered coins
 	 * @throws DisabledException
@@ -94,17 +96,57 @@ public class TestController {
 		}
 	}
 
-	/**
-	 *
+	/**Tests invalid coin entries
+	 * @throws DisabledException
 	 */
 	@Test
-	public void testInvalidCoin() {
-		fail("Not yet implemented");
+	public void testInvalidCoins() throws DisabledException {
+		assertEquals(0, controller.getBalance()); //starting balance should be 0
+
+		for( int i = 1 ; i < 10; i++) {
+			addCoin(15);
+			assertEquals(0, controller.getBalance()); //check that vending machine reports balances correctly
+		}
 	}
 
+	/**Tests coin capacities exceeded
+	 * @throws DisabledException
+	 */
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testValidCoinCapacityExeeded() throws DisabledException {
+		assertEquals(0, controller.getBalance()); //starting balance should be 0
+
+		for( int i = 1 ; i < 10; i++) {
+			addCoin(15);
+			assertEquals(0, controller.getBalance()); //check that vending machine reports balances correctly
+		}
+	}
+
+	// test to see that exception is thrown if adding a coin while disabled
+	@Test(expected = DisabledException.class)
+	public void testSlotDisabledAddCoin() throws DisabledException {
+		vendingMachine.getCoinSlot().disable();
+		addCoin(100);
+	}
+
+	/**Tests Coin Slot Enabled
+	 * @throws DisabledException
+	 */
+	@Test
+	public void testCoinSlotEnabled() throws DisabledException {
+		vendingMachine.getCoinSlot().enable();
+		assertEquals("Enabled", controller.getLastMessage());
+	}
+
+	/**Tests Coin Slot Enabled
+	 * @throws DisabledException
+	 */
+	@Test
+	public void testCoinSlotDisabled() throws DisabledException {
+		vendingMachine.getCoinSlot().enable();
+		assertEquals("Enabled", controller.getLastMessage()); //ensure the coin slot is enabled
+		vendingMachine.getCoinSlot().disable();
+		assertEquals("Disabled", controller.getLastMessage()); //ensure the coin slot is enabled
 	}
 
 	//////////////////////////////////////////////////////////////////
