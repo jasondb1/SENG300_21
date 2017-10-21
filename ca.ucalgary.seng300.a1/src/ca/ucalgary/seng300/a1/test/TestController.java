@@ -13,9 +13,8 @@ import ca.ucalgary.seng300.a1.logic.Controller;
 import org.lsmr.vending.Coin;
 import org.lsmr.vending.PopCan;
 import org.lsmr.vending.hardware.DisabledException;
+import org.lsmr.vending.hardware.SimulationException;
 import org.lsmr.vending.hardware.VendingMachine;
-
-
 
 /**
  * @authors Brian Hoang, Jaskaran Sidhu, Jason De Boer
@@ -112,13 +111,17 @@ public class TestController {
 	/**Tests coin capacities exceeded
 	 * @throws DisabledException
 	 */
-	@Test
-	public void testValidCoinCapacityExeeded() throws DisabledException {
+	@Test (expected = SimulationException.class)
+	public void testValidCoinCapacityExeeded() throws DisabledException, SimulationException {
 		assertEquals(0, controller.getBalance()); //starting balance should be 0
 
-		for( int i = 1 ; i < 10; i++) {
-			addCoin(15);
-			assertEquals(0, controller.getBalance()); //check that vending machine reports balances correctly
+		int amountInserted = 0;
+		for( int i = 1 ; i < (coinRackCapacity * 3) ; i++) {
+			addCoin(100);
+			amountInserted += 100;
+			if (i <= 200) {
+				assertEquals(amountInserted, controller.getBalance()); //check that vending machine reports balances correctly
+			}
 		}
 	}
 
