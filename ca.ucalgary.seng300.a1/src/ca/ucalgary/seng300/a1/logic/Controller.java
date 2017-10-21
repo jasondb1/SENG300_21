@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import org.lsmr.vending.hardware.*;
 
+
 /**
  * The controller class that initializes the implemented hardware and handles
  * events
