@@ -22,7 +22,6 @@ public class Controller implements Observer {
 
 	// listeners
 	private CSListener csListener = new CSListener();
-	// TODO: maybe make SBListener into an arraylist???;
 	private SBListener[] sbListener;
 	private PCRListener[] pcrListener;
 
@@ -30,8 +29,8 @@ public class Controller implements Observer {
 	 * Constructor that takes in a virtual vending machine and the labels for each
 	 * button
 	 *
-	 * @param vendingMachine
-	 * @param buttonLabel
+	 * @param vendingMachine The vending machine hardware the controller is being run on
+	 * @param buttonLabel Button Labels
 	 */
 	public Controller(VendingMachine vendingMachine, String[] buttonLabel) {
 
@@ -90,7 +89,6 @@ public class Controller implements Observer {
 		// Selection Button Event
 		for (SBListener activatedButton : sbListener) {
 			if (listener == activatedButton) {
-				// TODO: Deal with the selection button
 				switch (activatedButton.getStatus()) {
 				case "Pressed":
 					int rackID = activatedButton.getID();
@@ -100,8 +98,6 @@ public class Controller implements Observer {
 						try {
 							vendingMachine.getPopCanRack(rackID).dispensePopCan();
 						} catch (DisabledException | EmptyException | CapacityExceededException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
 						}
 
 						// adjust balance
@@ -113,14 +109,12 @@ public class Controller implements Observer {
 				default:
 					throw new SimulationException("Unknown Button Action");
 				}
-				// System.out.println("SBListener event"); //Just to test if it is functioning
 			}
 		}
 
 		// Pop Can Rack Event
 		for (PCRListener activatedRack : pcrListener) {
 			if (listener == activatedRack) {
-				// TODO: Deal with the selection button
 				switch (activatedRack.getLastAction()) {
 
 				case "Can Removed":
@@ -153,7 +147,7 @@ public class Controller implements Observer {
 			}
 		}
 	}
-
+ 
 	/**
 	 * Returns the balance of credit entered
 	 *
@@ -166,6 +160,5 @@ public class Controller implements Observer {
 	public String getLastMessage() {
 		return lastMessage;
 	}
-	// TODO: Methods related to machine function
 
 }

@@ -6,7 +6,7 @@ import org.lsmr.vending.PopCan;
 import org.lsmr.vending.hardware.*;
 
 /**
- * @authorBrian Hoang, Jaskaran Sidhu, Jason De Boer
+ * @authorBrian Hoang, Jaskaran Sidhu, Jason De Boer 
  *
  */
 public class PCRListener extends Observable implements PopCanRackListener {

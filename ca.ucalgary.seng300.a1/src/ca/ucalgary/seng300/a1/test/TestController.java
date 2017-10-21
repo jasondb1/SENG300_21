@@ -15,9 +15,8 @@ import org.lsmr.vending.Coin;
 import org.lsmr.vending.PopCan;
 import org.lsmr.vending.hardware.CapacityExceededException;
 import org.lsmr.vending.hardware.DisabledException;
+import org.lsmr.vending.hardware.SimulationException;
 import org.lsmr.vending.hardware.VendingMachine;
-
-
 
 /**
  * @authors Brian Hoang, Jaskaran Sidhu, Jason De Boer
@@ -115,13 +114,17 @@ public class TestController {
 	/**Tests coin capacities exceeded
 	 * @throws DisabledException
 	 */
-	@Test
-	public void testValidCoinCapacityExeeded() throws DisabledException {
+	@Test (expected = SimulationException.class)
+	public void testValidCoinCapacityExeeded() throws DisabledException, SimulationException {
 		assertEquals(0, controller.getBalance()); //starting balance should be 0
 
-		for( int i = 1 ; i < 10; i++) {
-			addCoin(15);
-			assertEquals(0, controller.getBalance()); //check that vending machine reports balances correctly
+		int amountInserted = 0;
+		for( int i = 1 ; i < (coinRackCapacity * 3) ; i++) {
+			addCoin(100);
+			amountInserted += 100;
+			if (i <= 200) {
+				assertEquals(amountInserted, controller.getBalance()); //check that vending machine reports balances correctly
+			}
 		}
 	}
 
@@ -161,8 +164,8 @@ public class TestController {
 
 	//TODO: expand to all racks
 	/**
+	 * Tests if the PCRListener announces that the pop has been removed.
 	 * @throws DisabledException
-	 *
 	 */
 	@Test
 	public void testDispensePop() throws DisabledException {
@@ -176,7 +179,11 @@ public class TestController {
 	}
 
 	
-	
+	/**
+	 * Testing if the PCRListener announces when the rack is full
+	 * @throws DisabledException
+	 * @throws CapacityExceededException
+	 */
 	@Test
 	public void testIsFull() throws DisabledException, CapacityExceededException {
 		addCoin(200);
@@ -186,8 +193,12 @@ public class TestController {
 		assertEquals("Full Rack", controller.getLastMessage());
 	}
 
-	
-	@Test
+	/**
+	 * Testing if the PCRListener announces when the rack is empty
+	 * @throws DisabledException
+	 * @throws CapacityExceededException
+	 */
+	@Test 
 	public void testIsEmpty() throws DisabledException, CapacityExceededException {
 		vendingMachine.getPopCanRack(0).unload();
 		addCoin(200);
@@ -196,6 +207,13 @@ public class TestController {
 		assertEquals("Empty Rack", controller.getLastMessage());
 	}
 	
+	
+	/**
+	 * Testing if the machine throws a disabled exception when the rack is disabled.
+	 * The last line in this test method should not be called. 
+	 * @throws DisabledException
+	 * @throws CapacityExceededException
+	 */
 	@Test (expected = DisabledException.class)
 	public void testDisabled() throws DisabledException, CapacityExceededException {
 		addCoin(200);
@@ -206,6 +224,12 @@ public class TestController {
 		
 	}
 	
+	/**
+	 * Testing the PCRListener's enabled method to see if it announces the rack
+	 * has been enabled
+	 * @throws DisabledException
+	 * @throws CapacityExceededException
+	 */
 	@Test 
 	public void testEnabled() throws DisabledException, CapacityExceededException {
 		addCoin(200);
