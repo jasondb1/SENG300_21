@@ -15,8 +15,8 @@ import org.lsmr.vending.hardware.*;
 public class Controller implements Observer {
 
 	private int balance = 0;
-	private String lastMessage = ""; // Maybe make this into a log later
-
+	private String lastMessage = ""; 
+	
 	// hardware
 	private VendingMachine vendingMachine;
 
@@ -126,14 +126,32 @@ public class Controller implements Observer {
 				case "Can Removed":
 					lastMessage = "Can Removed";
 					break;
-
+					
+				case "Can Added":
+					lastMessage = "Can Added";
+					break;
+					
+				case "Full Rack":
+					lastMessage = "Full Rack";
+					break;
+				
+				case "Empty Rack":
+					lastMessage = "Empty Rack";
+					break;
+					
+				case "Enabled":
+					lastMessage = "Enabled";
+					break;
+					
+				case "Disabled":
+					lastMessage = "Disabled";
+					break;
+				
 				default:
 					throw new SimulationException("Unknown Rack Action");
 				}
-				// System.out.println("PCRListener event"); //Just to test if it is functioning
 			}
 		}
-
 	}
 
 	/**

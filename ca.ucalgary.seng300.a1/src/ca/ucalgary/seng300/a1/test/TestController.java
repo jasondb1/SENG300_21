@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import org.junit.After;
 import org.junit.Before;
@@ -12,6 +13,7 @@ import org.junit.Test;
 import ca.ucalgary.seng300.a1.logic.Controller;
 import org.lsmr.vending.Coin;
 import org.lsmr.vending.PopCan;
+import org.lsmr.vending.hardware.CapacityExceededException;
 import org.lsmr.vending.hardware.DisabledException;
 import org.lsmr.vending.hardware.VendingMachine;
 
@@ -50,11 +52,12 @@ public class TestController {
 
 		popCanCosts = new ArrayList<Integer>(Arrays.asList(costs));
 		popCanNames = new ArrayList<String>(Arrays.asList(names));
+		
 
 		//initialize vending machine
 		vendingMachine = new VendingMachine(validCoins, popCanNames.size(), coinRackCapacity,
 				popCanRackCapacity, receptacleCapacity);
-
+		
 		vendingMachine.configure(popCanNames, popCanCosts);
 
 		controller = new Controller(vendingMachine, names);
@@ -172,6 +175,48 @@ public class TestController {
 
 	}
 
+	
+	
+	@Test
+	public void testIsFull() throws DisabledException, CapacityExceededException {
+		addCoin(200);
+		addCoin(100);
+		pushButton(0);
+		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
+		assertEquals("Full Rack", controller.getLastMessage());
+	}
+
+	
+	@Test
+	public void testIsEmpty() throws DisabledException, CapacityExceededException {
+		vendingMachine.getPopCanRack(0).unload();
+		addCoin(200);
+		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
+		pushButton(0);	
+		assertEquals("Empty Rack", controller.getLastMessage());
+	}
+	
+	@Test (expected = DisabledException.class)
+	public void testDisabled() throws DisabledException, CapacityExceededException {
+		addCoin(200);
+		pushButton(0);
+		vendingMachine.getPopCanRack(0).disable();
+		assertEquals("Disabled", controller.getLastMessage());
+		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
+		
+	}
+	
+	@Test 
+	public void testEnabled() throws DisabledException, CapacityExceededException {
+		addCoin(200);
+		vendingMachine.getPopCanRack(0).enable();
+		assertEquals("Enabled", controller.getLastMessage());
+		pushButton(0);
+		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
+		
+	}
+	
+	
 
 	//method for automatically entering coins
 	public void addCoin(int value) throws DisabledException {
