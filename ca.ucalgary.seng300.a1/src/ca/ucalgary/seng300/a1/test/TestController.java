@@ -173,7 +173,7 @@ public class TestController {
 		pushButton(0);
 		assertEquals(100, controller.getBalance()); //check that vending machine reports balances correctly
 		assertEquals("Can Removed" ,controller.getLastMessage());//need to check if can was removed
-													//TODO: need to check with pop can channel sink if pop was accepted
+		assertEquals("Item Delivered", controller.getDCLastAction());
 
 	}
 
