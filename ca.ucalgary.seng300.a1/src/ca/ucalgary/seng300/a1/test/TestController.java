@@ -50,12 +50,12 @@ public class TestController {
 
 		popCanCosts = new ArrayList<Integer>(Arrays.asList(costs));
 		popCanNames = new ArrayList<String>(Arrays.asList(names));
-		
+
 
 		//initialize vending machine
 		vendingMachine = new VendingMachine(validCoins, popCanNames.size(), coinRackCapacity,
 				popCanRackCapacity, receptacleCapacity);
-		
+
 		vendingMachine.configure(popCanNames, popCanCosts);
 
 		controller = new Controller(vendingMachine, names);
@@ -177,7 +177,7 @@ public class TestController {
 
 	}
 
-	
+
 	/**
 	 * Testing if the PCRListener announces when the rack is full
 	 * @throws DisabledException
@@ -197,35 +197,37 @@ public class TestController {
 	 * @throws DisabledException
 	 * @throws CapacityExceededException
 	 */
-	@Test 
+	@Test
 	public void testIsEmpty() throws DisabledException, CapacityExceededException {
 		vendingMachine.getPopCanRack(0).unload();
 		addCoin(200);
 		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
-		pushButton(0);	
+		pushButton(0);
 		assertEquals("Empty Rack", controller.getLastMessage());
 	}
-	
-	
+
+
 	/**
-	 * Testing if the machine if it doesn't dispense pop when the popCanRack is disabled 
-	 * and also leaves the balance unchanged. 
+	 * Testing if the machine if it doesn't dispense pop when the popCanRack is disabled
+	 * and also leaves the balance unchanged.
 	 * @throws DisabledException
 	 * @throws CapacityExceededException
 	 */
-	@Test (expected = DisabledException.class)
+	@Test
 	public void testPopNotDispensed() throws DisabledException, CapacityExceededException {
 		addCoin(200);
+		//vendingMachine.getSelectionButton(0).disable();
 		vendingMachine.getPopCanRack(0).disable();
 		pushButton(0);
 		assertEquals(200, controller.getBalance());
-		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
+		assertEquals("Rack 0 is disabled", controller.getLastMessage());
+		//vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
 	}
-	
-	
+
+
 	/**
 	 * Testing if the machine throws a disabled exception when the rack is disabled.
-	 * The last line in this test method should not be called. 
+	 * The last line in this test method should not be called.
 	 * @throws DisabledException
 	 * @throws CapacityExceededException
 	 */
@@ -236,55 +238,56 @@ public class TestController {
 		vendingMachine.getPopCanRack(0).disable();
 		assertEquals("Disabled", controller.getLastMessage());
 		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
-		
+
 	}
-	
+
 	/**
 	 * Testing the PCRListener's enabled method to see if it announces the rack
 	 * has been enabled
 	 * @throws DisabledException
 	 * @throws CapacityExceededException
 	 */
-	@Test 
+	@Test
 	public void testEnabledPCR() throws DisabledException, CapacityExceededException {
 		addCoin(200);
 		vendingMachine.getPopCanRack(0).enable();
 		assertEquals("Enabled", controller.getLastMessage());
 		pushButton(0);
 		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
-		
-	} 
-	
-	
+
+	}
+
+
 	/**
-	 * Testing if the machine if it doesn't dispense pop when the selection buttons 
-	 * are disabled and also leaves the balance unchanged. 
+	 * Testing if the machine if it doesn't dispense pop when the selection buttons
+	 * are disabled and also leaves the balance unchanged.
 	 * @throws DisabledException
 	 * @throws CapacityExceededException
 	 */
-	@Test (expected = DisabledException.class)
+	@Test
 	public void testDisabledButtons() throws DisabledException, CapacityExceededException {
 		addCoin(200);
 		vendingMachine.getSelectionButton(0).disable();
 		pushButton(0);
 		assertEquals(200, controller.getBalance());
+		assertEquals("Button 0 is disabled", controller.getLastMessage());
 	}
-	
+
 	/**
 	 * Testing if the machine if it dispense's pop when the selectionButtons
 	 * are enabled
 	 * @throws DisabledException
 	 * @throws CapacityExceededException
 	 */
-	@Test 
+	@Test
 	public void testEnabledButtons() throws DisabledException, CapacityExceededException {
 		addCoin(200);
 		vendingMachine.getSelectionButton(0).enable();
-		pushButton(0);		
+		pushButton(0);
 	}
-	
-	
-	
+
+
+
 
 	//method for automatically entering coins
 	public void addCoin(int value) throws DisabledException {
