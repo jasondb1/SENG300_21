@@ -1,0 +1,49 @@
+Our Typical Git Workflow
+
+I think the following is a simple workflow that we can use
+
+Guides:
+http://rogerdudler.github.io/git-guide/ (Good basic guide to commands)
+https://developer.ridgerun.com/wiki/index.php/Typical_Git_workflow
+
+Information summarized from the above guides
+Typical Workflow are as follows
+
+   1.  get local copy of code
+   2.  create a branch
+   3.  edit files
+   4.  add and commit changes to local machine (stage and commit, in eclipse or git gui)
+   5.  get back in sync with changes commited by others (i.e. do a pull)
+   6.  push branch to remote git repository
+   
+We may use pull request or    
+   7.  merge local branch into local master
+   8.  push local master to remote git repostiory
+   
+You should be able to do most of this in eclipse
+
+Notes:
+We want to make sure that the master branch is always a branch that compiles and works.
+
+
+Summary for working on a branch
+1. git checkout -b <feature_x> (creates a new branch feature_x and switches to it)
+
+2. edit files on the branch
+3. git add <filename> or git add .    (to add a file or all files, called stage changes in eclipse or some gui's)
+4. git commit -m "Commit message"
+
+
+5. git checkout master          (switch to master branch)
+6. git pull                     (update your repository with changes others may have made)
+7. get checkout <branch>
+8. git push origin <branch>     (push branch to remote repository)
+
+Merging into master
+
+pull-request         
+
+-or-
+
+9. git merge <branch>                       (merges your changes into master branch on local machine)
+10. git push origin master                  (push branch to remote repository)
