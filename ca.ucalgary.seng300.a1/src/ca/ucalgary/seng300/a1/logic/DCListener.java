@@ -2,20 +2,17 @@ package ca.ucalgary.seng300.a1.logic;
 
 import java.util.Observable;
 
-import ca.ucalgary.seng300.a1.hardware.AbstractHardware;
-import ca.ucalgary.seng300.a1.hardware.AbstractHardwareListener;
-import ca.ucalgary.seng300.a1.hardware.DeliveryChute;
-import ca.ucalgary.seng300.a1.hardware.DeliveryChuteListener;
+import org.lsmr.vending.hardware.*;
 
 /**
- * @author Brian Hoang, Jaskaran Sidhu, Jason De Boer 
+ * @author Brian Hoang, Jaskaran Sidhu, Jason De Boer
  *
  */
 public class DCListener extends Observable implements DeliveryChuteListener {
 
 	private String state = "Idle";
-	
-	
+
+
 	@Override
 	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
 		// TODO Auto-generated method stub
@@ -29,7 +26,7 @@ public class DCListener extends Observable implements DeliveryChuteListener {
 		// TODO Auto-generated method stub
 		state = "Disabled";
 	    setChanged();
-	    notifyObservers();	
+	    notifyObservers();
 	}
 
 	@Override
@@ -47,7 +44,7 @@ public class DCListener extends Observable implements DeliveryChuteListener {
 	}
 
 	// For when door is closed, delivery chute returned deliverable items removed from chute
-	// 
+	//
 	@Override
 	public void doorClosed(DeliveryChute chute) {
 		// TODO Auto-generated method stub
@@ -60,7 +57,7 @@ public class DCListener extends Observable implements DeliveryChuteListener {
 		setChanged();
 		notifyObservers();
 	}
-	
+
 	public String getState() {
 		return state;
 	}
