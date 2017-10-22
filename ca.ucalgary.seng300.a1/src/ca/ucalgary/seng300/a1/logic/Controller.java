@@ -67,7 +67,7 @@ public class Controller implements Observer {
 		
 		// register delivery chute listener
 		vendingMachine.getDeliveryChute().register(dcListener);
-		dcListener.addObserver(this);		// currently throwing null pointer
+		dcListener.addObserver(this);
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class Controller implements Observer {
 			default:
 				throw new SimulationException("Unknown Delivery Chute Event");
 			}		
-			System.out.println("Delivery Chute Event");
+			//System.out.println("Delivery Chute Event"); //Just to test if it is functioning
 		}
 
 	}

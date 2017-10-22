@@ -136,12 +136,12 @@ public class TestController {
 		vendingMachine.getCoinSlot().addCoin(new Coin(value));
 	}
 
-	//method for automatically entering coins
+	//method for automatically pushing buttons
 	public void pushButton(int index) throws DisabledException {
 		vendingMachine.getSelectionButton(index).press();
 	}
 
-	//method for automatically entering coins
+	//method for automatically loading pop
 	public void loadPopCan(int popRack, String popType) throws DisabledException {
 		vendingMachine.getPopCanRack(popRack).load(new PopCan(popType));
 	}
