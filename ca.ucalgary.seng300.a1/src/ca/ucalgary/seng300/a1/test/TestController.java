@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 import org.junit.After;
 import org.junit.Before;
@@ -209,13 +208,29 @@ public class TestController {
 	
 	
 	/**
+	 * Testing if the machine if it doesn't dispense pop when the popCanRack is disabled 
+	 * and also leaves the balance unchanged. 
+	 * @throws DisabledException
+	 * @throws CapacityExceededException
+	 */
+	@Test (expected = DisabledException.class)
+	public void testPopNotDispensed() throws DisabledException, CapacityExceededException {
+		addCoin(200);
+		vendingMachine.getPopCanRack(0).disable();
+		pushButton(0);
+		//assertEquals(200, controller.getBalance());
+		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
+	}
+	
+	
+	/**
 	 * Testing if the machine throws a disabled exception when the rack is disabled.
 	 * The last line in this test method should not be called. 
 	 * @throws DisabledException
 	 * @throws CapacityExceededException
 	 */
 	@Test (expected = DisabledException.class)
-	public void testDisabled() throws DisabledException, CapacityExceededException {
+	public void testDisabledPCR() throws DisabledException, CapacityExceededException {
 		addCoin(200);
 		pushButton(0);
 		vendingMachine.getPopCanRack(0).disable();
@@ -231,7 +246,7 @@ public class TestController {
 	 * @throws CapacityExceededException
 	 */
 	@Test 
-	public void testEnabled() throws DisabledException, CapacityExceededException {
+	public void testEnabledPCR() throws DisabledException, CapacityExceededException {
 		addCoin(200);
 		vendingMachine.getPopCanRack(0).enable();
 		assertEquals("Enabled", controller.getLastMessage());
@@ -239,6 +254,37 @@ public class TestController {
 		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
 		
 	}
+	
+	
+	/**
+	 * Testing if the machine if it doesn't dispense pop when the selection buttons 
+	 * are disabled and also leaves the balance unchanged. 
+	 * @throws DisabledException
+	 * @throws CapacityExceededException
+	 */
+	@Test //(expected = DisabledException.class)
+	public void testDisabledButtons() throws DisabledException, CapacityExceededException {
+		addCoin(200);
+		vendingMachine.getSelectionButton(0).disable();
+		pushButton(0);
+		//assertEquals(200, controller.getBalance());
+	}
+	
+	/**
+	 * Testing if the machine if it dispense's pop when the selectionButtons
+	 * are enabled
+	 * @throws DisabledException
+	 * @throws CapacityExceededException
+	 */
+	@Test 
+	public void testEnabledButtons() throws DisabledException, CapacityExceededException {
+		addCoin(200);
+		vendingMachine.getSelectionButton(0).enable();
+		pushButton(0);
+		
+		
+	}
+	
 	
 	
 

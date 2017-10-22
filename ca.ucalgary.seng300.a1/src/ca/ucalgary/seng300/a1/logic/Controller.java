@@ -105,6 +105,10 @@ public class Controller implements Observer {
 					}
 					// do nothing if not enough change
 					break;
+					
+				case "Disabled":
+					// Thinking of adding something so it know's that it is disabled TODO
+					break;
 
 				default:
 					throw new SimulationException("Unknown Button Action");
