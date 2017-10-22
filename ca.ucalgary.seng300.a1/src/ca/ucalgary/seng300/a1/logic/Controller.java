@@ -3,34 +3,41 @@ package ca.ucalgary.seng300.a1.logic;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.lsmr.vending.hardware.*;
+import ca.ucalgary.seng300.a1.hardware.CapacityExceededException;
+import ca.ucalgary.seng300.a1.hardware.DisabledException;
+import ca.ucalgary.seng300.a1.hardware.EmptyException;
+import ca.ucalgary.seng300.a1.hardware.SimulationException;
+import ca.ucalgary.seng300.a1.hardware.VendingMachine;
 
 /**
  * The controller class that initializes the implemented hardware and handles
  * events
  *
- * @authors Brian Hoang, Jaskaran Sidhu, Jason De Boer
+ * @author
  *
  */
 public class Controller implements Observer {
 
 	private int balance = 0;
-	private String lastMessage = "";
+	private String lastMessage = ""; // Maybe make this into a log later
+	private String dclLastAction;
 
 	// hardware
 	private VendingMachine vendingMachine;
 
 	// listeners
 	private CSListener csListener = new CSListener();
+	// TODO: maybe make SBListener into an arraylist???;
 	private SBListener[] sbListener;
 	private PCRListener[] pcrListener;
+	private DCListener dcListener = new DCListener();
 
 	/**
 	 * Constructor that takes in a virtual vending machine and the labels for each
 	 * button
 	 *
-	 * @param vendingMachine The vending machine hardware the controller is being run on
-	 * @param buttonLabel Button Labels
+	 * @param vendingMachine
+	 * @param buttonLabel
 	 */
 	public Controller(VendingMachine vendingMachine, String[] buttonLabel) {
 
@@ -57,6 +64,10 @@ public class Controller implements Observer {
 			vendingMachine.getPopCanRack(i).register(pcrListener[i]);
 			(pcrListener[i]).addObserver(this);
 		}
+		
+		// register delivery chute listener
+		vendingMachine.getDeliveryChute().register(dcListener);
+		dcListener.addObserver(this);		// currently throwing null pointer
 	}
 
 	/**
@@ -70,38 +81,43 @@ public class Controller implements Observer {
 	public void update(Observable listener, Object obj) {
 		// Coin Slot Event
 		if (listener == csListener) {
-			lastMessage = csListener.getStatus();
-			switch (lastMessage) {
+			// TODO: Deal with the coin Slot
+			switch (csListener.getStatus()) {
 			case "Enabled":
+				// TODO: Something
 				break;
 			case "Disabled":
+				// TODO: Something
 				break;
 			case "Accepted":
 				balance += csListener.getLastCoinValue();
 				break;
 			case "Rejected":
+				// TODO: Something/Nothing
 				break;
 			default:
-				throw new SimulationException("Unknown Coin Slot Event");
+				throw new SimulationException("Unknown CoinSlot Event");
+
 			}
+			// System.out.println("CSListener event reporting!"); //Just to test if it is
+			// functioning
 		}
 
 		// Selection Button Event
 		for (SBListener activatedButton : sbListener) {
 			if (listener == activatedButton) {
+				// TODO: Deal with the selection button
 				switch (activatedButton.getStatus()) {
 				case "Pressed":
 					int rackID = activatedButton.getID();
+
 					// dispense pop if enough money
 					if (balance >= vendingMachine.getPopKindCost(rackID)) {
 						try {
 							vendingMachine.getPopCanRack(rackID).dispensePopCan();
-						} catch (DisabledException e) {
-							lastMessage = "Button " + rackID +  " Disabled";
-						}catch (EmptyException e) {
-							lastMessage = "Rack " + rackID +  " empty";
-							}
-						catch (CapacityExceededException e) {
+						} catch (DisabledException | EmptyException | CapacityExceededException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
 
 						// adjust balance
@@ -113,43 +129,41 @@ public class Controller implements Observer {
 				default:
 					throw new SimulationException("Unknown Button Action");
 				}
+				// System.out.println("SBListener event"); //Just to test if it is functioning
 			}
 		}
 
 		// Pop Can Rack Event
 		for (PCRListener activatedRack : pcrListener) {
 			if (listener == activatedRack) {
+				// TODO: Deal with the selection button
 				switch (activatedRack.getLastAction()) {
 
 				case "Can Removed":
 					lastMessage = "Can Removed";
 					break;
 
-				case "Can Added":
-					lastMessage = "Can Added";
-					break;
-
-				case "Full Rack":
-					lastMessage = "Full Rack";
-					break;
-
-				case "Empty Rack":
-					lastMessage = "Empty Rack";
-					break;
-
-				case "Enabled":
-					lastMessage = "Enabled";
-					break;
-
-				case "Disabled":
-					lastMessage = "Disabled";
-					break;
-
 				default:
 					throw new SimulationException("Unknown Rack Action");
 				}
+				// System.out.println("PCRListener event"); //Just to test if it is functioning
 			}
 		}
+		
+		// Delivery Chute Event
+		if(listener == dcListener) {
+			switch(dcListener.getState()) {
+			
+			case "Item Delivered":
+					dclLastAction = "Item Delivered";
+					break;
+			
+			default:
+				throw new SimulationException("Unknown Delivery Chute Event");
+			}		
+			System.out.println("Delivery Chute Event");
+		}
+
 	}
 
 	/**
@@ -164,5 +178,10 @@ public class Controller implements Observer {
 	public String getLastMessage() {
 		return lastMessage;
 	}
+	
+	public String getDCLastAction() {
+		return dclLastAction;
+	}
+	// TODO: Methods related to machine function
 
 }

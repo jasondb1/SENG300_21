@@ -1,25 +1,25 @@
 package ca.ucalgary.seng300.a1.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ca.ucalgary.seng300.a1.Coin;
+import ca.ucalgary.seng300.a1.PopCan;
+import ca.ucalgary.seng300.a1.hardware.DisabledException;
+import ca.ucalgary.seng300.a1.hardware.VendingMachine;
 import ca.ucalgary.seng300.a1.logic.Controller;
-import org.lsmr.vending.Coin;
-import org.lsmr.vending.PopCan;
-import org.lsmr.vending.hardware.CapacityExceededException;
-import org.lsmr.vending.hardware.DisabledException;
-import org.lsmr.vending.hardware.SimulationException;
-import org.lsmr.vending.hardware.VendingMachine;
+
+
 
 /**
- * @authors Brian Hoang, Jaskaran Sidhu, Jason De Boer
+ * @author
  *
  */
 public class TestController {
@@ -35,7 +35,7 @@ public class TestController {
 	private String[] names = {"pop1","pop2","pop3"};
 	private int coinRackCapacity = 200;
 	private int receptacleCapacity = 200;
-	private int popCanRackCapacity = 10;
+	private int popCanRackCapacity = 20;
 
 	//Hardware
 	private VendingMachine vendingMachine;
@@ -51,12 +51,12 @@ public class TestController {
 
 		popCanCosts = new ArrayList<Integer>(Arrays.asList(costs));
 		popCanNames = new ArrayList<String>(Arrays.asList(names));
-		
+
 
 		//initialize vending machine
 		vendingMachine = new VendingMachine(validCoins, popCanNames.size(), coinRackCapacity,
 				popCanRackCapacity, receptacleCapacity);
-		
+
 		vendingMachine.configure(popCanNames, popCanCosts);
 
 		controller = new Controller(vendingMachine, names);
@@ -70,16 +70,13 @@ public class TestController {
 
 	}
 
-	/**Any cleanup code required
-	 *
-	 */
 	@After
 	public void cleanup() {
 
 	}
 
 	//////////////////////////////////////////////////////////////////
-	// Testing coin slot
+	// Testing coin entries
 	//////////////////////////////////////////////////////////////////
 	/**Tests coin balances for entered coins
 	 * @throws DisabledException
@@ -98,61 +95,17 @@ public class TestController {
 		}
 	}
 
-	/**Tests invalid coin entries
-	 * @throws DisabledException
+	/**
+	 *
 	 */
 	@Test
-	public void testInvalidCoins() throws DisabledException {
-		assertEquals(0, controller.getBalance()); //starting balance should be 0
-
-		for( int i = 1 ; i < 10; i++) {
-			addCoin(15);
-			assertEquals(0, controller.getBalance()); //check that vending machine reports balances correctly
-		}
+	public void testInvalidCoin() {
+		fail("Not yet implemented");
 	}
 
-	/**Tests coin capacities exceeded
-	 * @throws DisabledException
-	 */
-	@Test (expected = SimulationException.class)
-	public void testValidCoinCapacityExeeded() throws DisabledException, SimulationException {
-		assertEquals(0, controller.getBalance()); //starting balance should be 0
-
-		int amountInserted = 0;
-		for( int i = 1 ; i < (coinRackCapacity * 3) ; i++) {
-			addCoin(100);
-			amountInserted += 100;
-			if (i <= 200) {
-				assertEquals(amountInserted, controller.getBalance()); //check that vending machine reports balances correctly
-			}
-		}
-	}
-
-	// test to see that exception is thrown if adding a coin while disabled
-	@Test(expected = DisabledException.class)
-	public void testSlotDisabledAddCoin() throws DisabledException {
-		vendingMachine.getCoinSlot().disable();
-		addCoin(100);
-	}
-
-	/**Tests Coin Slot Enabled
-	 * @throws DisabledException
-	 */
 	@Test
-	public void testCoinSlotEnabled() throws DisabledException {
-		vendingMachine.getCoinSlot().enable();
-		assertEquals("Enabled", controller.getLastMessage());
-	}
-
-	/**Tests Coin Slot Enabled
-	 * @throws DisabledException
-	 */
-	@Test
-	public void testCoinSlotDisabled() throws DisabledException {
-		vendingMachine.getCoinSlot().enable();
-		assertEquals("Enabled", controller.getLastMessage()); //ensure the coin slot is enabled
-		vendingMachine.getCoinSlot().disable();
-		assertEquals("Disabled", controller.getLastMessage()); //ensure the coin slot is enabled
+	public void test() {
+		fail("Not yet implemented");
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -164,8 +117,8 @@ public class TestController {
 
 	//TODO: expand to all racks
 	/**
-	 * Tests if the PCRListener announces that the pop has been removed.
 	 * @throws DisabledException
+	 *
 	 */
 	@Test
 	public void testDispensePop() throws DisabledException {
@@ -173,74 +126,10 @@ public class TestController {
 		addCoin(100);
 		pushButton(0);
 		assertEquals(100, controller.getBalance()); //check that vending machine reports balances correctly
-		assertEquals("Can Removed" ,controller.getLastMessage());//need to check if can was removed
-													//TODO: need to check with pop can channel sink if pop was accepted
-
+		assertEquals("Can Removed" ,controller.getLastMessage()); //check that pop can is removed from rack		
+		assertEquals("Item Delivered", controller.getDCLastAction()); // check that pop can arrives at delivery chute
 	}
 
-	
-	/**
-	 * Testing if the PCRListener announces when the rack is full
-	 * @throws DisabledException
-	 * @throws CapacityExceededException
-	 */
-	@Test
-	public void testIsFull() throws DisabledException, CapacityExceededException {
-		addCoin(200);
-		addCoin(100);
-		pushButton(0);
-		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
-		assertEquals("Full Rack", controller.getLastMessage());
-	}
-
-	/**
-	 * Testing if the PCRListener announces when the rack is empty
-	 * @throws DisabledException
-	 * @throws CapacityExceededException
-	 */
-	@Test 
-	public void testIsEmpty() throws DisabledException, CapacityExceededException {
-		vendingMachine.getPopCanRack(0).unload();
-		addCoin(200);
-		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
-		pushButton(0);	
-		assertEquals("Empty Rack", controller.getLastMessage());
-	}
-	
-	
-	/**
-	 * Testing if the machine throws a disabled exception when the rack is disabled.
-	 * The last line in this test method should not be called. 
-	 * @throws DisabledException
-	 * @throws CapacityExceededException
-	 */
-	@Test (expected = DisabledException.class)
-	public void testDisabled() throws DisabledException, CapacityExceededException {
-		addCoin(200);
-		pushButton(0);
-		vendingMachine.getPopCanRack(0).disable();
-		assertEquals("Disabled", controller.getLastMessage());
-		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
-		
-	}
-	
-	/**
-	 * Testing the PCRListener's enabled method to see if it announces the rack
-	 * has been enabled
-	 * @throws DisabledException
-	 * @throws CapacityExceededException
-	 */
-	@Test 
-	public void testEnabled() throws DisabledException, CapacityExceededException {
-		addCoin(200);
-		vendingMachine.getPopCanRack(0).enable();
-		assertEquals("Enabled", controller.getLastMessage());
-		pushButton(0);
-		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
-		
-	}
-	
-	
 
 	//method for automatically entering coins
 	public void addCoin(int value) throws DisabledException {
