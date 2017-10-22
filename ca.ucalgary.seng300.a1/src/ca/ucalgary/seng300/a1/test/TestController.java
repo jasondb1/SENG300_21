@@ -218,7 +218,7 @@ public class TestController {
 		addCoin(200);
 		vendingMachine.getPopCanRack(0).disable();
 		pushButton(0);
-		//assertEquals(200, controller.getBalance());
+		assertEquals(200, controller.getBalance());
 		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
 	}
 	
@@ -262,12 +262,12 @@ public class TestController {
 	 * @throws DisabledException
 	 * @throws CapacityExceededException
 	 */
-	@Test //(expected = DisabledException.class)
+	@Test (expected = DisabledException.class)
 	public void testDisabledButtons() throws DisabledException, CapacityExceededException {
 		addCoin(200);
 		vendingMachine.getSelectionButton(0).disable();
 		pushButton(0);
-		//assertEquals(200, controller.getBalance());
+		assertEquals(200, controller.getBalance());
 	}
 	
 	/**
@@ -280,9 +280,7 @@ public class TestController {
 	public void testEnabledButtons() throws DisabledException, CapacityExceededException {
 		addCoin(200);
 		vendingMachine.getSelectionButton(0).enable();
-		pushButton(0);
-		
-		
+		pushButton(0);		
 	}
 	
 	
