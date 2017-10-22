@@ -7,27 +7,29 @@ import ca.ucalgary.seng300.a1.hardware.AbstractHardwareListener;
 import ca.ucalgary.seng300.a1.hardware.DeliveryChute;
 import ca.ucalgary.seng300.a1.hardware.DeliveryChuteListener;
 
-/*
- * Observations
- * 	Door should not matter as of assignment 1
- * 	
+/**
+ * @author Brian Hoang, Jaskaran Sidhu, Jason De Boer 
+ *
  */
 public class DCListener extends Observable implements DeliveryChuteListener {
 
-	private String isEmpty;
 	private String state = "Idle";
 	
 	
 	@Override
 	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
 		// TODO Auto-generated method stub
-		
+		state = "Enabled";
+	    setChanged();
+	    notifyObservers();
 	}
 
 	@Override
 	public void disabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
 		// TODO Auto-generated method stub
-		
+		state = "Disabled";
+	    setChanged();
+	    notifyObservers();	
 	}
 
 	@Override
@@ -54,7 +56,9 @@ public class DCListener extends Observable implements DeliveryChuteListener {
 	@Override
 	public void chuteFull(DeliveryChute chute) {
 		// TODO Auto-generated method stub
-		
+		state = "Full";
+		setChanged();
+		notifyObservers();
 	}
 	
 	public String getState() {

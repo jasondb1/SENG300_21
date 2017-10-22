@@ -3,9 +3,11 @@ package ca.ucalgary.seng300.a1.logic;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.lsmr.vending.hardware.*;
-
+import ca.ucalgary.seng300.a1.hardware.CapacityExceededException;
+import ca.ucalgary.seng300.a1.hardware.DisabledException;
+import ca.ucalgary.seng300.a1.hardware.EmptyException;
 import ca.ucalgary.seng300.a1.hardware.SimulationException;
+import ca.ucalgary.seng300.a1.hardware.VendingMachine;
 
 /**
  * The controller class that initializes the implemented hardware and handles
@@ -175,9 +177,21 @@ public class Controller implements Observer {
 		if(listener == dcListener) {
 			switch(dcListener.getState()) {
 			
+			case "Enabled":
+				dclLastAction = "Enabled";
+				break;
+				
+			case "Disabled":
+				dclLastAction = "Disabled";
+				break;
+			
 			case "Item Delivered":
-					dclLastAction = "Item Delivered";
-					break;
+				dclLastAction = "Item Delivered";
+				break;
+					
+			case "Full":
+				dclLastAction = "Chute Full";
+				break;
 			
 			default:
 				throw new SimulationException("Unknown Delivery Chute Event");
