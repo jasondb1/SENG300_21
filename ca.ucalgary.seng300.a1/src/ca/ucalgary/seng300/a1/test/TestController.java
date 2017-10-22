@@ -253,7 +253,7 @@ public class TestController {
 		pushButton(0);
 		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
 		
-	}
+	} 
 	
 	
 	/**
