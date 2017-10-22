@@ -1,6 +1,6 @@
 package ca.ucalgary.seng300.a1.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,13 +9,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ca.ucalgary.seng300.a1.Coin;
+import ca.ucalgary.seng300.a1.PopCan;
+import ca.ucalgary.seng300.a1.hardware.CapacityExceededException;
+import ca.ucalgary.seng300.a1.hardware.DisabledException;
+import ca.ucalgary.seng300.a1.hardware.SimulationException;
+import ca.ucalgary.seng300.a1.hardware.VendingMachine;
 import ca.ucalgary.seng300.a1.logic.Controller;
-import org.lsmr.vending.Coin;
-import org.lsmr.vending.PopCan;
-import org.lsmr.vending.hardware.CapacityExceededException;
-import org.lsmr.vending.hardware.DisabledException;
-import org.lsmr.vending.hardware.SimulationException;
-import org.lsmr.vending.hardware.VendingMachine;
 
 /**
  * @authors Brian Hoang, Jaskaran Sidhu, Jason De Boer
@@ -173,7 +173,7 @@ public class TestController {
 		pushButton(0);
 		assertEquals(100, controller.getBalance()); //check that vending machine reports balances correctly
 		assertEquals("Can Removed" ,controller.getLastMessage());//need to check if can was removed
-		assertEquals("Item Delivered", controller.getDCLastAction());
+		assertEquals("Item Delivered", controller.getDCLastAction()); // checks that can has arrived at delivery chute
 
 	}
 
@@ -224,6 +224,20 @@ public class TestController {
 		//vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
 	}
 
+	/**
+	 * Testing if the machine does not dispense pop when delivery chute is disabled and 
+	 * balance should be left unchanged.
+	 * @throws DisabledException
+	 * @throws CapacityExceededException
+	 */
+	@Test
+	public void testPopNotDispensedDisabledChute() throws DisabledException, CapacityExceededException {
+		addCoin(200);
+		vendingMachine.getDeliveryChute().disable();
+		pushButton(0);
+		assertEquals(200, controller.getBalance());
+		assertEquals("Disabled", controller.getDCLastAction());
+	}
 
 	/**
 	 * Testing if the machine throws a disabled exception when the rack is disabled.
@@ -255,6 +269,58 @@ public class TestController {
 		pushButton(0);
 		vendingMachine.getPopCanRack(0).acceptPopCan(new PopCan(names[0]));
 
+	}
+	
+	/**
+	 *  Testing DCListener's enabled method to check if chute is enabled
+	 *  @throws DisabledException
+	 *  @throws CapacityExceededException
+	 */
+	@Test
+	public void testEnabledChute() throws DisabledException, CapacityExceededException {
+		vendingMachine.getDeliveryChute().enable();
+		assertEquals("Enabled", controller.getDCLastAction());
+		
+	}
+	
+	/**
+	 *  Testing DCListener's disabled method to check if chute is disabled
+	 *  @throws DisabledException
+	 *  @throws CapacityExceededException
+	 */
+	@Test
+	public void testDisabledChute() throws DisabledException, CapacityExceededException {
+		vendingMachine.getDeliveryChute().disable();
+		assertEquals("Disabled", controller.getDCLastAction());
+		
+	}
+	
+	/**
+	 *  Testing DCListener's chuteFull to check if chute reached max capacity
+	 *  @throws DisabledException
+	 *  @throws CapacityExceededException
+	 */
+	@Test
+	public void testChuteFull() throws DisabledException, CapacityExceededException {
+		vendingMachine = new VendingMachine(validCoins, popCanNames.size(), coinRackCapacity,
+				popCanRackCapacity, 1);
+
+		vendingMachine.configure(popCanNames, popCanCosts);
+
+		controller = new Controller(vendingMachine, names);
+		
+		//load all of the the pop racks
+		for (int i = 0; i < popCanNames.size(); i++) {
+			for(int j = 0; j < popCanRackCapacity; j++) {
+				loadPopCan(i, names[i]);
+			}
+		}
+		
+		addCoin(200);
+		addCoin(200);
+		pushButton(0);
+		assertEquals(200, controller.getBalance());
+		assertEquals("Chute Full", controller.getDCLastAction());
 	}
 
 
@@ -294,14 +360,14 @@ public class TestController {
 		vendingMachine.getCoinSlot().addCoin(new Coin(value));
 	}
 
-	//method for automatically entering coins
+	//method for automatically pushing a button
 	public void pushButton(int index) throws DisabledException {
 		vendingMachine.getSelectionButton(index).press();
 	}
 
-	//method for automatically entering coins
+	//method for loading pop cans onto a rack
 	public void loadPopCan(int popRack, String popType) throws DisabledException {
 		vendingMachine.getPopCanRack(popRack).load(new PopCan(popType));
 	}
-
+	
 }
