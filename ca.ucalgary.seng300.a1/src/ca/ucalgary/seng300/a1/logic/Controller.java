@@ -15,8 +15,8 @@ import org.lsmr.vending.hardware.*;
 public class Controller implements Observer {
 
 	private int balance = 0;
-	private String lastMessage = ""; 
-	
+	private String lastMessage = "";
+
 	// hardware
 	private VendingMachine vendingMachine;
 
@@ -94,22 +94,31 @@ public class Controller implements Observer {
 					int rackID = activatedButton.getID();
 
 					// dispense pop if enough money
-					if (balance >= vendingMachine.getPopKindCost(rackID)) {
+					if (balance >= vendingMachine.getPopKindCost(rackID) &&
+									!vendingMachine.getSelectionButton(rackID).isDisabled()) {
 						try {
 							vendingMachine.getPopCanRack(rackID).dispensePopCan();
-						} catch (DisabledException | EmptyException | CapacityExceededException e) {
+							// adjust balance
+							balance -= vendingMachine.getPopKindCost(rackID);
+						} catch (DisabledException e) {
+							lastMessage = "Rack " + rackID + " is disabled";
+						}catch (EmptyException e) {
+							lastMessage = "Rack " + rackID + " is empty";
+						}catch (CapacityExceededException e) {
+							lastMessage = e.getMessage();
 						}
-
-						// adjust balance
-						balance -= vendingMachine.getPopKindCost(rackID);
+					} else if (vendingMachine.getSelectionButton(rackID).isDisabled()) {
+						lastMessage = "Button " + rackID + " is disabled";
+					} else {
+						lastMessage = "Not enough money";
 					}
 					// do nothing if not enough change
 					break;
-					
+
 				case "Disabled":
 					// Thinking of adding something so it know's that it is disabled TODO
 					break;
-					
+
 				case "Enabled":
 					break;
 
@@ -127,34 +136,34 @@ public class Controller implements Observer {
 				case "Can Removed":
 					lastMessage = "Can Removed";
 					break;
-					
+
 				case "Can Added":
 					lastMessage = "Can Added";
 					break;
-					
+
 				case "Full Rack":
 					lastMessage = "Full Rack";
 					break;
-				
+
 				case "Empty Rack":
 					lastMessage = "Empty Rack";
 					break;
-					
+
 				case "Enabled":
 					lastMessage = "Enabled";
 					break;
-					
+
 				case "Disabled":
 					lastMessage = "Disabled";
 					break;
-				
+
 				default:
 					throw new SimulationException("Unknown Rack Action");
 				}
 			}
 		}
 	}
- 
+
 	/**
 	 * Returns the balance of credit entered
 	 *
