@@ -3,11 +3,7 @@ package ca.ucalgary.seng300.a1.logic;
 import java.util.Observable;
 import java.util.Observer;
 
-import ca.ucalgary.seng300.a1.hardware.CapacityExceededException;
-import ca.ucalgary.seng300.a1.hardware.DisabledException;
-import ca.ucalgary.seng300.a1.hardware.EmptyException;
-import ca.ucalgary.seng300.a1.hardware.SimulationException;
-import ca.ucalgary.seng300.a1.hardware.VendingMachine;
+import org.lsmr.vending.hardware.*;
 
 /**
  * The controller class that initializes the implemented hardware and handles
@@ -19,9 +15,9 @@ import ca.ucalgary.seng300.a1.hardware.VendingMachine;
 public class Controller implements Observer {
 
 	private int balance = 0;
-	private String lastMessage = ""; 
+	private String lastMessage = "";
 	private String dclLastAction;
-	
+
 	// hardware
 	private VendingMachine vendingMachine;
 
@@ -30,7 +26,7 @@ public class Controller implements Observer {
 	private SBListener[] sbListener;
 	private PCRListener[] pcrListener;
 	private DCListener dcListener = new DCListener();
-	
+
 	/**
 	 * Constructor that takes in a virtual vending machine and the labels for each
 	 * button
@@ -63,7 +59,7 @@ public class Controller implements Observer {
 			vendingMachine.getPopCanRack(i).register(pcrListener[i]);
 			(pcrListener[i]).addObserver(this);
 		}
-		
+
 		// register delivery chute listener
 		vendingMachine.getDeliveryChute().register(dcListener);
 		dcListener.addObserver(this);
@@ -172,33 +168,33 @@ public class Controller implements Observer {
 				}
 			}
 		}
-		
+
 		// Delivery Chute Event
 		if(listener == dcListener) {
 			switch(dcListener.getState()) {
-			
+
 			case "Enabled":
 				dclLastAction = "Enabled";
 				break;
-				
+
 			case "Disabled":
 				dclLastAction = "Disabled";
 				break;
-			
+
 			case "Item Delivered":
 				dclLastAction = "Item Delivered";
 				break;
-					
+
 			case "Full":
 				dclLastAction = "Chute Full";
 				break;
-			
+
 			default:
 				throw new SimulationException("Unknown Delivery Chute Event");
-			}		
+			}
 		}
 	}
- 
+
 	/**
 	 * Returns the balance of credit entered
 	 *
@@ -211,7 +207,7 @@ public class Controller implements Observer {
 	public String getLastMessage() {
 		return lastMessage;
 	}
-	
+
 	public String getDCLastAction() {
 		return dclLastAction;
 	}
