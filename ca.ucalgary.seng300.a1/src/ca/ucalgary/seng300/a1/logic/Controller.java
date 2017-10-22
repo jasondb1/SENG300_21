@@ -5,6 +5,8 @@ import java.util.Observer;
 
 import org.lsmr.vending.hardware.*;
 
+import ca.ucalgary.seng300.a1.hardware.SimulationException;
+
 /**
  * The controller class that initializes the implemented hardware and handles
  * events
@@ -16,6 +18,7 @@ public class Controller implements Observer {
 
 	private int balance = 0;
 	private String lastMessage = ""; 
+	private String dclLastAction;
 	
 	// hardware
 	private VendingMachine vendingMachine;
@@ -24,7 +27,8 @@ public class Controller implements Observer {
 	private CSListener csListener = new CSListener();
 	private SBListener[] sbListener;
 	private PCRListener[] pcrListener;
-
+	private DCListener dcListener = new DCListener();
+	
 	/**
 	 * Constructor that takes in a virtual vending machine and the labels for each
 	 * button
@@ -57,6 +61,10 @@ public class Controller implements Observer {
 			vendingMachine.getPopCanRack(i).register(pcrListener[i]);
 			(pcrListener[i]).addObserver(this);
 		}
+		
+		// register delivery chute listener
+		vendingMachine.getDeliveryChute().register(dcListener);
+		dcListener.addObserver(this);
 	}
 
 	/**
@@ -153,6 +161,19 @@ public class Controller implements Observer {
 				}
 			}
 		}
+		
+		// Delivery Chute Event
+		if(listener == dcListener) {
+			switch(dcListener.getState()) {
+			
+			case "Item Delivered":
+					dclLastAction = "Item Delivered";
+					break;
+			
+			default:
+				throw new SimulationException("Unknown Delivery Chute Event");
+			}		
+		}
 	}
  
 	/**
@@ -166,6 +187,10 @@ public class Controller implements Observer {
 
 	public String getLastMessage() {
 		return lastMessage;
+	}
+	
+	public String getDCLastAction() {
+		return dclLastAction;
 	}
 
 }
