@@ -15,8 +15,8 @@ import org.lsmr.vending.hardware.*;
 public class Controller implements Observer {
 
 	private int balance = 0;
-	private String lastMessage = ""; 
-	
+	private String lastMessage = "";
+
 	// hardware
 	private VendingMachine vendingMachine;
 
@@ -92,12 +92,16 @@ public class Controller implements Observer {
 				switch (activatedButton.getStatus()) {
 				case "Pressed":
 					int rackID = activatedButton.getID();
-
 					// dispense pop if enough money
 					if (balance >= vendingMachine.getPopKindCost(rackID)) {
 						try {
 							vendingMachine.getPopCanRack(rackID).dispensePopCan();
-						} catch (DisabledException | EmptyException | CapacityExceededException e) {
+						} catch (DisabledException e) {
+							lastMessage = "Button " + rackID +  " Disabled";
+						}catch (EmptyException e) {
+							lastMessage = "Rack " + rackID +  " empty";
+							}
+						catch (CapacityExceededException e) {
 						}
 
 						// adjust balance
@@ -120,34 +124,34 @@ public class Controller implements Observer {
 				case "Can Removed":
 					lastMessage = "Can Removed";
 					break;
-					
+
 				case "Can Added":
 					lastMessage = "Can Added";
 					break;
-					
+
 				case "Full Rack":
 					lastMessage = "Full Rack";
 					break;
-				
+
 				case "Empty Rack":
 					lastMessage = "Empty Rack";
 					break;
-					
+
 				case "Enabled":
 					lastMessage = "Enabled";
 					break;
-					
+
 				case "Disabled":
 					lastMessage = "Disabled";
 					break;
-				
+
 				default:
 					throw new SimulationException("Unknown Rack Action");
 				}
 			}
 		}
 	}
- 
+
 	/**
 	 * Returns the balance of credit entered
 	 *
